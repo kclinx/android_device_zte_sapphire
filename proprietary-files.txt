@@ -6,9 +6,6 @@ vendor/lib/egl/libEGL_adreno.so
 vendor/lib/egl/libGLESv1_CM_adreno.so
 vendor/lib/egl/libGLESv2_adreno.so
 vendor/lib/egl/libq3dtools_adreno.so
-vendor/lib/egl/libRBEGL_adreno.so
-vendor/lib/egl/libRBGLESv1_CM_adreno.so
-vendor/lib/egl/libRBGLESv2_adreno.so
 vendor/lib/libadreno_utils.so
 vendor/lib/libc2d30-a3xx.so
 vendor/lib/libC2D2.so
@@ -21,7 +18,6 @@ vendor/lib/librs_adreno_sha1.so
 vendor/lib/libRSDriver_adreno.so
 vendor/lib/libsc-a3xx.so
 vendor/lib/libscale.so
-vendor/lib/libuiblur.so
 
 # ADSP
 bin/adsprpcd
@@ -57,7 +53,6 @@ vendor/lib/libbtnv.so
 
 # Camera
 bin/mm-qcamera-daemon
-lib/hw/camera.vendor.msm8909.so
 lib/libmm-qcamera.so
 lib/libmmcamera_interface.so
 lib/libmmjpeg_interface.so
@@ -65,13 +60,6 @@ lib/libqomx_core.so
 vendor/lib/libactuator_dw9714.so
 vendor/lib/libactuator_dw9714_camcorder.so
 vendor/lib/libactuator_dw9714_camera.so
-vendor/lib/libactuator_dw9714_ov5670_csp_camcorder.so
-vendor/lib/libactuator_dw9714_ov5670_csp_camera.so
-vendor/lib/libactuator_dw9714_ov5670_csp.so
-vendor/lib/libchromatix_gc2355_8909_common.so
-vendor/lib/libchromatix_gc2355_8909_default_video.so
-vendor/lib/libchromatix_gc2355_8909_liveshot.so
-vendor/lib/libchromatix_gc2355_8909_preview.so
 vendor/lib/libchromatix_ov5670_qc700_common.so
 vendor/lib/libchromatix_ov5670_qc700_default_video.so
 vendor/lib/libchromatix_ov5670_qc700_hfr_120fps.so
@@ -85,7 +73,6 @@ vendor/lib/libchromatix_ov5670_qc700_zsl.so
 vendor/lib/libjpegdhw.so
 vendor/lib/libjpegehw.so
 vendor/lib/libmmcamera_faceproc.so
-vendor/lib/libmmcamera_gc2355_8909.so
 vendor/lib/libmmcamera_hdr_gb_lib.so
 vendor/lib/libmmcamera_hdr_lib.so
 vendor/lib/libmmcamera_ov5670_qc700.so
@@ -129,7 +116,6 @@ vendor/lib/libssd.so
 # GPS
 etc/flp.conf
 etc/izat.conf
-etc/quipc.conf
 etc/sap.conf
 lib/libloc_api_v02.so
 lib/libloc_ds_api.so
@@ -141,7 +127,6 @@ vendor/lib/liblbs_core.so
 
 # OMX
 lib/libOmxSwVencMpeg4.so
-vendor/lib/libDivxDrm.so
 vendor/lib/libI420colorconvert.so
 vendor/lib/libmmosal.so
 vendor/lib/libmm-color-convertor.so
@@ -150,7 +135,6 @@ vendor/lib/libOmxAacDec.so
 vendor/lib/libOmxEvrcDec.so
 vendor/lib/libOmxIttiamVdec.so
 vendor/lib/libOmxQcelp13Dec.so
-vendor/lib/libSHIMDivxDrm.so
 
 # Perf
 vendor/bin/perfd
@@ -214,12 +198,6 @@ vendor/lib/libxml.so
 # Sensors
 lib/hw/sensors.msm8909.so
 vendor/etc/calmodule.cfg
-vendor/lib/libcalmodule_akm.so
-vendor/lib/libcalmodule_gyroscope.so
-vendor/lib/libcalmodule_senodia.so
-
-# TCT daemon
-bin/tctd
 
 # Thermal
 vendor/bin/thermal-engine
@@ -232,9 +210,6 @@ bin/time_daemon
 vendor/lib/libtime_genoff.so
 vendor/lib/libTimeService.so
 
-# USB drivers
-etc/USBDriver.iso
-
 # Venus firmware
 etc/firmware/venus.b00
 etc/firmware/venus.b01
@@ -245,9 +220,5 @@ etc/firmware/venus.mbn
 etc/firmware/venus.mdt
 
 # Widevine
-lib/libdrmdecrypt.so
-vendor/lib/drm/libdrmwvmplugin.so
 vendor/lib/mediadrm/libwvdrmengine.so
-vendor/lib/libwvdrm_L3.so
-vendor/lib/libwvm.so
-vendor/lib/libWVStreamControlAPI_L3.so
+
