@@ -172,7 +172,7 @@ vendor/lib/libsmemlog.so
 vendor/lib/libsubsystem_control.so
 
 # RIL
--app/qcrilmsgtunnel/qcrilmsgtunnel.apk
+#-app/qcrilmsgtunnel/qcrilmsgtunnel.apk
 -app/shutdownlistener/shutdownlistener.apk
 bin/netmgrd
 bin/qmuxd
