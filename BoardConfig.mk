@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/alcatel/pop35
+LOCAL_PATH := device/ans/ul40
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
@@ -35,19 +35,16 @@ TARGET_GLOBAL_CFLAGS += -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=softfp
 
 # Inline kernel building
-BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x3F ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlyprintk androidboot.bootloader=L2A73030BR00
-BOARD_KERNEL_CMDLINE += selinux=1 enforcing=0 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlyprintk
 BOARD_RAMDISK_OFFSET := 0x01000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) --board R2A73030BR00
-TARGET_KERNEL_CONFIG := cyanogenmod-pop35_defconfig
-TARGET_KERNEL_SOURCE := kernel/alcatel/msm8909
+#BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+TARGET_KERNEL_CONFIG := lineage_ul40_defconfig
+TARGET_KERNEL_SOURCE := kernel/ans/ul40
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(PWD)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
-LZMA_RAMDISK_TARGETS := recovery
 
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "qualcomm-smd"
@@ -104,12 +101,12 @@ TARGET_PROVIDES_LIBLIGHT := true
 MALLOC_SVELTE := true
 
 # Partition sizes
-BOARD_BOOTIMAGE_PARTITION_SIZE := 0x02000000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x02000000
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2053531648
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 5065636864 # (5065653248 - 16384)
-BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
-BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
+BOARD_BOOTIMAGE_PARTITION_SIZE := 50331648
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 50331648
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3556769792
+BOARD_CACHEIMAGE_PARTITION_SIZE := 553648128 #512M
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 3221208576
+#BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 
@@ -131,7 +128,7 @@ BOARD_NO_SECURE_DISCARD := true
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += device/alcatel/pop35/sepolicy
+BOARD_SEPOLICY_DIRS += device/ans/ul40/sepolicy
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true

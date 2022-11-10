@@ -20,8 +20,8 @@ set -e
 export INITIAL_COPYRIGHT_YEAR=2016
 
 # Required!
-DEVICE=pop35
-VENDOR=alcatel
+DEVICE=ul40
+VENDOR=ans
 
 # Load extractutils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"

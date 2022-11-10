@@ -14,11 +14,11 @@
 # limitations under the License.
 #
 
-DEVICE_PACKAGE_OVERLAYS += device/alcatel/pop35/overlay
+DEVICE_PACKAGE_OVERLAYS += device/ans/ul40/overlay
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
-$(call inherit-product-if-exists, vendor/alcatel/pop35/pop35-vendor.mk)
+$(call inherit-product-if-exists, vendor/ans/ul40/ul40-vendor.mk)
 
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := hdpi
@@ -121,11 +121,11 @@ PRODUCT_PACKAGES += \
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
-    $(call find-copy-subdir-files,*,device/alcatel/pop35/ramdisk,root)
+    $(call find-copy-subdir-files,*,device/ans/ul40/ramdisk,root)
 
 # Prebuilt
 PRODUCT_COPY_FILES += \
-    $(call find-copy-subdir-files,*,device/alcatel/pop35/prebuilt/system,system)
+    $(call find-copy-subdir-files,*,device/ans/ul40/prebuilt/system,system)
 
 # Media codecs
 PRODUCT_COPY_FILES += \

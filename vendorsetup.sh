@@ -1,2 +1,2 @@
-add_lunch_combo lineage_pop35-userdebug
-add_lunch_combo lineage_pop35-eng
+add_lunch_combo lineage_ul40-userdebug
+add_lunch_combo lineage_ul40-eng

@@ -27,43 +27,36 @@
 #
 #
 
+import init.carrier.rc
+
 on early-init
     mkdir /firmware 0771 system system
     mkdir /system 0777 root root
     symlink /data/tombstones /tombstones
-    write /sys/kernel/mm/ksm/pages_to_scan 100
-    write /sys/kernel/mm/ksm/sleep_millisecs 500
-    write /sys/kernel/mm/ksm/run 1
-    write /sys/kernel/mm/ksm/deferred_timer 1
-
-#[FEATURE]-ADD by TCTNB.XLJ, 2014/04/23, FR-642133, mount tctpersist partition
-#    mkdir /tctpersist 0500 system system
-    mkdir /tctpersist 0771 system system
-    mkdir /persist/data 0700 system system
 
 on fs
-    # add by ting.cao for bootprof file
-    write /proc/bootprof "INIT:Mount_START"
     wait /dev/block/bootdevice
     mount_all fstab.qcom
-    swapon_all fstab.qcom
-    write /proc/bootprof "INIT:Mount_END"
-#changed by liuph at 2014-12-17 for resize /data FR877329 end
-    
+    write /proc/sys/vm/swappiness 100
+
+    # Keeping following partitions outside fstab file. As user may not have
+    # these partition flashed on the device. Failure to mount any partition in fstab file
+    # results in failure to launch late-start class.
+
+    wait /dev/block/bootdevice/by-name/cache
+    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
+
+    wait /dev/block/bootdevice/by-name/persist
+    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
+    mkdir /persist/data 0700 system system
     restorecon_recursive /persist
-    restorecon_recursive /tctpersist
 
-    # We chown/chmod /tctpersist again so because mount is run as root + defaults
-    chown system system /tctpersist
-    chmod 0775 /tctpersist
+    wait /dev/block/bootdevice/by-name/modem
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+    #write /sys/kernel/boot_adsp/boot 1
 
-#add by stephen.wu, add /tctpersist/phone dir for record wifi call, name id
-	mkdir /tctpersist/phone 0777 system system
-#add end by stephen.wu
-
-#add code for jrdrecord by xtfu for PR1021282
-    mkdir /tctpersist/jrdrecord 0775 root system
-    chmod 0775 /tctpersist/jrdrecord
+    wait /dev/block/bootdevice/by-name/oem
+    mount ext4 /dev/block/bootdevice/by-name/oem /oem ro nosuid nodev barrier=1
 
 on post-fs-data
     mkdir /data/tombstones 0771 system system
@@ -91,6 +84,21 @@ on property:persist.usb.chgdisabled=1
 on property:persist.usb.chgdisabled=0
     write /sys/class/power_supply/battery/charging_enabled 1
 
+service qrngd /system/bin/qrngd -f
+   class main
+   user root
+   group root
+
+service qrngp /system/bin/qrngp -f
+   class main
+   user root
+   group root
+   oneshot
+   disabled
+
+on property:sys.boot_completed=1
+   start qrngp
+
 service qseecomd /system/bin/qseecomd
    class core
    user root
@@ -101,7 +109,7 @@ service perfd /system/vendor/bin/perfd
    user root
    disabled
 
-service thermal-engine /system/bin/thermal-engine
+service thermal-engine /system/vendor/bin/thermal-engine
    class main
    user root
    socket thermal-send-client stream 0666 system system
@@ -132,24 +140,7 @@ on charger
 
 on boot
     start rmt_storage
-    write /proc/sys/vm/swappiness 100
-
-    chown system system /sys/class/leds/led_G/brightness
-    chown system system /sys/class/leds/led_G/blink
-    chmod 0664 /sys/class/leds/led_G/blink
-
-#[BUGFIX]-Add-BEGIN by TCT-SH-linjun 2015-3-19 PR:898944
-    mkdir /tctpersist/crash_report 0775 root system
-    mkdir /tctpersist/app_log 0775 root system
-    mkdir /tctpersist/app_log/crash 0775 root system
-#[BUGFIX]-Add-END
-
-# add by cuirui for torch ,PR: 946725
-    chown root system /sys/class/leds/led-torch/brightness
-    chmod 0666 /sys/class/leds/led-torch/brightness
-
-# add by kui.sun for hang_detect PR:   1054834
-    chown system system /dev/RT_Monitor
+    insmod /system/lib/modules/adsprpc.ko
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -167,7 +158,7 @@ service ppd /system/bin/mm-pp-daemon
 service per_mgr /system/bin/pm-service
     class core
     user system
-    group system net_raw
+    group system
 
 on property:init.svc.surfaceflinger=stopped
     stop ppd
@@ -175,15 +166,63 @@ on property:init.svc.surfaceflinger=stopped
 on property:init.svc.surfaceflinger=running
     start ppd
 
-#[BUGFIX]-Add-BEGIN by TCTNB.93391,07/02/2015,1035882,USB Driver Auto Install
-on post-fs
-    write /sys/class/android_usb/android0/f_mass_storage/rom/file /system/etc/USBDriver.iso
-#[BUGFIX]-Add-END by TCTNB.93391,07/02/2015,1035882,USB Driver Auto Install
+service imsstarter /system/bin/sh /system/etc/init.qti.ims.sh
+    class main
+    oneshot
 
-#[FEATURE]-ADD-BEGIN by TCTNB.93391, 2015/07/08,970064,change simlock remain times to tctpersist
-on post-fs
-    mkdir /tctpersist/simlock 0771 system radio
-# [FEATURE]-ADD-END by TCTNB.93391, 2015/07/08,970064,change simlock remain times to tctpersist
+on property:vold.decrypt=trigger_restart_framework
+    start imsstarter
 
-on property:ro.tombstone.enable=true
-    write /proc/sys/fs/suid_dumpable 1
+service imsqmidaemon /system/bin/imsqmidaemon
+    class main
+    user system
+    socket ims_qmid stream 0660 system radio
+    group radio log qcom_diag
+    disabled
+
+on property:service.qti.ims.enabled=1
+    start imsqmidaemon
+
+service imsdatadaemon /system/bin/imsdatadaemon
+    class main
+    user system
+    socket ims_datad stream 0660 system radio
+    group system wifi radio inet log qcom_diag
+    disabled
+
+on property:sys.ims.QMI_DAEMON_STATUS=1
+    start imsdatadaemon
+
+service ims_rtp_daemon /system/bin/ims_rtp_daemon
+   class main
+   user system
+   socket ims_rtpd stream 0660 system radio
+   group radio diag qcom_diag log inet
+   disabled
+
+service imscmservice /system/bin/imscmservice
+   class main
+   user system
+   group radio diag qcom_diag inet log
+   disabled
+
+on property:sys.ims.DATA_DAEMON_STATUS=1
+    start ims_rtp_daemon
+    start imscmservice
+
+service touch /system/bin/sh /system/etc/init.qti.synaptics_dsx_qhd.sh
+   class late_start
+   user root
+   group root
+   oneshot
+   disabled
+service dts_configurator /system/bin/dts_configurator
+   class main
+   user system
+   group system
+   oneshot
+on property:persist.sys.synaptics_dsx.qhd=true
+   start touch
+
+on property:persist.sys.synaptics_dsx.qhd=false
+   stop touch
