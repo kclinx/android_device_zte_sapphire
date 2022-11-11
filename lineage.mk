@@ -1,6 +1,6 @@
 # Boot animation
 TARGET_SCREEN_WIDTH := 480
-TARGET_SCREEN_HEIGHT := 854
+TARGET_SCREEN_HEIGHT := 800
 
 # Inherit some common LineageOS stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
@@ -12,7 +12,7 @@ $(call inherit-product, device/ans/ul40/ul40.mk)
 PRODUCT_DEVICE := ul40
 PRODUCT_NAME := lineage_ul40
 PRODUCT_BRAND := ans
-PRODUCT_MODEL := 5065D
+PRODUCT_MODEL := ul40
 PRODUCT_MANUFACTURER := ANS
 PRODUCT_RELEASE_NAME := UL40
 
