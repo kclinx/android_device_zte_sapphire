@@ -41,12 +41,14 @@ BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 an
 # FIXME: SELINUX does not work yet
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 
+# reboot 3 seconds after a kernel panic --> we can debug it in /sys/fs/pstore from the ramdisk
+BOARD_KERNEL_CMDLINE += panic=3
+
 BOARD_RAMDISK_OFFSET := 0x01000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_IMAGE_NAME := zImage-dtb
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-#BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 TARGET_KERNEL_CONFIG := lineage_ul40_defconfig
 TARGET_KERNEL_SOURCE := kernel/ans/ul40
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(PWD)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
