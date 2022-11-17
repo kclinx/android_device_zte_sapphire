@@ -27,6 +27,7 @@
 #
 
 target=`getprop ro.board.platform`
+mode=`getprop ro.boot.mode`
 
 function configure_memory_parameters() {
 # Set Memory paremeters.
@@ -1281,6 +1282,7 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
+	echo 2 > /proc/sys/kernel/sched_spill_nr_run
 	#Set mmcblk0 read_ahead value for 8909_512 target
         ProductName=`getprop ro.product.name`
 	if [ "$ProductName" == "msm8909_512" ]; then
@@ -1351,7 +1353,8 @@ case "$target" in
 	# Enable core control
 	if [ "$ProductName" != "msm8909w" ]; then
 		insmod /system/lib/modules/core_ctl.ko
-		echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+		echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+		chmod 444 /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
 		max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
 		min_freq=800000
 		echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
@@ -1561,3 +1564,17 @@ case "$target" in
         echo $oem_version > /sys/devices/soc0/image_crm_version
         ;;
 esac
+if [ $mode == "charger" ] ;then
+    echo 0 > /sys/devices/system/cpu/cpu1/online
+    echo 0 > /sys/devices/system/cpu/cpu2/online
+    echo 0 > /sys/devices/system/cpu/cpu3/online
+    echo 0 > /sys/devices/system/cpu/cpu4/online
+    echo 0 > /sys/devices/system/cpu/cpu5/online
+    echo 0 > /sys/devices/system/cpu/cpu6/online
+    echo 0 > /sys/devices/system/cpu/cpu7/online
+    #echo 729600 >  /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+fi
+
+# local RC
+/system/bin/userLocalRC.sh

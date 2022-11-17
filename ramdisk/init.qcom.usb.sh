@@ -27,13 +27,9 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 #
-#xxl add#2017.2.17.ljinsen
-/system/bin/hwinit
-/system/bin/para_rwmd
-
 vbus_draw=`getprop persist.sys.usb.vbus.draw`
 if [ "$vbus_draw" != "" ]; then
-	echo "${vbus_draw}" > /sys/module/ci13xxx_msm/parameters/vbus_draw_mA
+        echo "${vbus_draw}" > /sys/module/ci13xxx_msm/parameters/vbus_draw_mA
 fi
 chown -h root.system /sys/devices/platform/msm_hsusb/gadget/wakeup
 chmod -h 220 /sys/devices/platform/msm_hsusb/gadget/wakeup
@@ -51,10 +47,10 @@ case "$usbchgdisabled" in
         "msm8660")
         echo "$usbchgdisabled" > /sys/module/pmic8058_charger/parameters/disabled
         echo "$usbchgdisabled" > /sys/module/smb137b/parameters/disabled
-	;;
+        ;;
         "msm8960")
         echo "$usbchgdisabled" > /sys/module/pm8921_charger/parameters/disabled
-	;;
+        ;;
     esac
 esac
 
@@ -65,7 +61,7 @@ case "$usbcurrentlimit" in
     case $target in
         "msm8960")
         echo "$usbcurrentlimit" > /sys/module/pm8921_charger/parameters/usb_max_current
-	;;
+        ;;
     esac
 esac
 
@@ -84,6 +80,12 @@ for f in /sys/bus/esoc/devices/*; do
         fi
     fi
 done
+fi
+
+if [ -d /config/usb_gadget ]; then
+    setprop sys.usb.configfs 1
+else
+    setprop sys.usb.configfs 0
 fi
 
 target=`getprop ro.board.platform`
@@ -125,7 +127,7 @@ case "$usb_config" in
                    setprop persist.sys.usb.config diag,diag_mdm,diag_mdm2,serial_hsic,serial_hsusb,rmnet_hsic,rmnet_hsusb,mass_storage,adb
               ;;
               *)
-		case "$target" in
+                case "$target" in
                         "msm8916")
                             setprop persist.sys.usb.config diag,serial_smd,rmnet_bam,adb
                         ;;
@@ -133,7 +135,8 @@ case "$usb_config" in
                             setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_ipa,mass_storage,adb
                         ;;
                         "msm8909")
-                            setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
+                            #setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
+                            setprop persist.sys.usb.config diag,adb
                         ;;
                         *)
                             setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_bam,mass_storage,adb
@@ -156,9 +159,9 @@ case "$target" in
         echo ssusb > /sys/bus/platform/devices/usb_bam/enable
     ;;
     "apq8084")
-	if [ "$baseband" == "apq" ]; then
-		echo "msm_hsic_host" > /sys/bus/platform/drivers/xhci_msm_hsic/unbind
-	fi
+        if [ "$baseband" == "apq" ]; then
+                echo "msm_hsic_host" > /sys/bus/platform/drivers/xhci_msm_hsic/unbind
+        fi
     ;;
     "msm8226")
          if [ -e /sys/bus/platform/drivers/msm_hsic_host ]; then
@@ -222,15 +225,15 @@ esac
 cdromname="/system/etc/cdrom_install.iso"
 platformver=`cat /sys/devices/soc0/hw_platform`
 case "$target" in
-	"msm8226" | "msm8610" | "msm8916" | "msm8909")
-		case $platformver in
-			"QRD")
-				echo "mounting usbcdrom lun"
-				echo $cdromname > /sys/class/android_usb/android0/f_mass_storage/rom/file
-				chmod 0444 /sys/class/android_usb/android0/f_mass_storage/rom/file
-				;;
-		esac
-		;;
+        "msm8226" | "msm8610" | "msm8916" | "msm8909")
+                case $platformver in
+                        "QRD")
+                                echo "mounting usbcdrom lun"
+                                echo $cdromname > /sys/class/android_usb/android0/f_mass_storage/rom/file
+                                chmod 0444 /sys/class/android_usb/android0/f_mass_storage/rom/file
+                                ;;
+                esac
+                ;;
 esac
 
 #
@@ -238,23 +241,23 @@ esac
 #
 diag_extra=`getprop persist.sys.usb.config.extra`
 if [ "$diag_extra" == "" ]; then
-	setprop persist.sys.usb.config.extra none
+        setprop persist.sys.usb.config.extra none
 fi
 
 # soc_ids for 8916/8939 differentiation
 if [ -f /sys/devices/soc0/soc_id ]; then
-	soc_id=`cat /sys/devices/soc0/soc_id`
+        soc_id=`cat /sys/devices/soc0/soc_id`
 else
-	soc_id=`cat /sys/devices/system/soc/soc0/id`
+        soc_id=`cat /sys/devices/system/soc/soc0/id`
 fi
 
 # enable rps cpus on msm8939/msm8909/msm8929 target
 setprop sys.usb.rps_mask 0
 case "$soc_id" in
-	"239" | "241" | "263" | "268" | "269" | "270")
-		setprop sys.usb.rps_mask 10
-	;;
-	"245" | "258" | "259" | "265" | "275")
-		setprop sys.usb.rps_mask 4
-	;;
+        "239" | "241" | "263" | "268" | "269" | "270")
+                setprop sys.usb.rps_mask 10
+        ;;
+        "245" | "258" | "259" | "265" | "275")
+                setprop sys.usb.rps_mask 4
+        ;;
 esac

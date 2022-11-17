@@ -53,7 +53,9 @@ key 106   DPAD_RIGHT
 key 115   VOLUME_UP
 key 114   VOLUME_DOWN
 key 116   POWER
+key 143   WAKEUP
 key 212   CAMERA
+key 187   APP_SWITCH
 
 key 16    Q
 key 17    W

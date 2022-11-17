@@ -36,7 +36,8 @@ on early-init
 
 on fs
     wait /dev/block/bootdevice
-    mount_all fstab.qcom
+    mount tmpfs tmpfs /data
+    mount_all fstab.ftm.qcom
     write /proc/sys/vm/swappiness 100
 
     # Keeping following partitions outside fstab file. As user may not have
@@ -50,11 +51,6 @@ on fs
     #mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
     mkdir /persist/data 0700 system system
     restorecon_recursive /persist
-
-    # add carrier parti dir permission
-    mkdir /carrier 0771 system system
-    #config the selinux context for carrier
-    restorecon_recursive /carrier
 
     wait /dev/block/bootdevice/by-name/modem
     mount vfat /dev/block/bootdevice/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
@@ -182,6 +178,7 @@ service proximity_init /system/bin/proximity.init -r
     class main
     user  system
     group system radio
+    #disabled
     oneshot
 
 service imsqmidaemon /system/bin/imsqmidaemon

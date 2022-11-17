@@ -1,4 +1,4 @@
-# android_device_ans_ul40
-Android device configuration for ANS UL40 msm8909 
+# android_device_zte_sapphire
+Android device configuration for zte sapphire msm8909 
 
 # This is a WIP, does not boot yet

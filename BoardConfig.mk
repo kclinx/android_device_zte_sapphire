@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/ans/ul40
+LOCAL_PATH := device/zte/sapphire
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
@@ -49,8 +49,8 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_IMAGE_NAME := zImage-dtb
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-TARGET_KERNEL_CONFIG := lineage_ul40_defconfig
-TARGET_KERNEL_SOURCE := kernel/ans/ul40
+TARGET_KERNEL_CONFIG := lineage_sapphire_defconfig
+TARGET_KERNEL_SOURCE := kernel/zte/sapphire
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(PWD)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
 
 # ANT+
@@ -135,7 +135,7 @@ BOARD_NO_SECURE_DISCARD := true
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += device/ans/ul40/sepolicy
+BOARD_SEPOLICY_DIRS += device/zte/sapphire/sepolicy
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
